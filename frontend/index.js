@@ -9,7 +9,9 @@ async function sprintChallenge5() { // Note the async keyword so you can use `aw
   // ❗ Use the variables `mentors` and `learners` to store the data.
   // ❗ Use the await keyword when using axios.
   
+  // eslint-disable-next-line no-undef
   const mentorsResponse = await axios.get('http://localhost:3003/api/mentors');
+  // eslint-disable-next-line no-undef
   const learnersResponse = await axios.get('http://localhost:3003/api/learners');
 
   const mentors = mentorsResponse.data;
