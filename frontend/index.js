@@ -8,9 +8,15 @@ async function sprintChallenge5() { // Note the async keyword so you can use `aw
   // 🧠 Use Axios to GET learners and mentors.
   // ❗ Use the variables `mentors` and `learners` to store the data.
   // ❗ Use the await keyword when using axios.
+  
+  const mentorsResponse = await axios.get('http://localhost:3003/api/mentors');
+  const learnersResponse = await axios.get('http://localhost:3003/api/learners');
 
-  let mentors = [] // fix this
-  let learners = [] // fix this
+  const mentors = mentorsResponse.data;
+    const learners = learnersResponse.data; 
+  
+    // console.log('Mentors:', mentors);
+    // console.log('Learners:', learners)
 
   // 👆 ==================== TASK 1 END ====================== 👆
 
@@ -28,6 +34,24 @@ async function sprintChallenge5() { // Note the async keyword so you can use `aw
   //     "Grace Hopper"
   //   ]`
   // }
+  const mentorMap = new Map();
+  mentors.forEach(mentor => {
+    const fullName = `${mentor.firstName} ${mentor.lastName}`;
+    // console.log(`Mapping mentor ID ${mentor.id} to ${fullName}`);
+    mentorMap.set(mentor.id, fullName);
+  });
+
+  const transformedLearners = learners.map(learner => {
+    return {
+      id: learner.id,
+      fullName: learner.fullName,
+      email: learner.email,
+      mentors: learner.mentors.map(mentorId => mentorMap.get(mentorId) || 'Unknown Mentor')
+    };
+  });
+  
+  console.log(transformedLearners);
+
 
   // 👆 ==================== TASK 2 END ====================== 👆
 
@@ -38,7 +62,7 @@ async function sprintChallenge5() { // Note the async keyword so you can use `aw
 
   // 👇 ==================== TASK 3 START ==================== 👇
 
-  for (let learner of learners) { // looping over each learner object
+  for (let learner of transformedLearners) { // looping over each learner object
 
     // 🧠 Flesh out the elements that describe each learner
     // ❗ Give the elements below their (initial) classes, textContent and proper nesting.
@@ -48,10 +72,31 @@ async function sprintChallenge5() { // Note the async keyword so you can use `aw
     // ❗ Inspect the mock site closely to understand what the initial texts and classes look like!
 
     const card = document.createElement('div')
+    card.classList.add('card')
     const heading = document.createElement('h3')
+    heading.textContent = learner.fullName
     const email = document.createElement('div')
+    email.textContent = learner.email
     const mentorsHeading = document.createElement('h4')
+    mentorsHeading.classList.add('closed')
+    mentorsHeading.textContent = 'Mentors'
     const mentorsList = document.createElement('ul')
+
+
+    learner.mentors.forEach(mentor => {
+      const mentorItem = document.createElement('li');
+      mentorItem.textContent = mentor;
+      mentorsList.appendChild(mentorItem);
+  });
+
+    card.appendChild(heading)
+    card.appendChild(email)
+    card.appendChild(mentorsHeading)
+    card.appendChild(mentorsList)
+    
+    
+    
+
 
     // 👆 ==================== TASK 3 END ====================== 👆
 
